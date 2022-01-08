@@ -61,144 +61,170 @@
 
     <script type="text/javascript">
       !function () { var e = function () { var e, t = "__tcfapiLocator", a = [], n = window; for (; n;) { try { if (n.frames[t]) { e = n; break } } catch (e) { } if (n === window.top) break; n = n.parent } e || (!function e() { var a = n.document, r = !!n.frames[t]; if (!r) if (a.body) { var i = a.createElement("iframe"); i.style.cssText = "display:none", i.name = t, a.body.appendChild(i) } else setTimeout(e, 5); return !r }(), n.__tcfapi = function () { for (var e, t = arguments.length, n = new Array(t), r = 0; r < t; r++)n[r] = arguments[r]; if (!n.length) return a; if ("setGdprApplies" === n[0]) n.length > 3 && 2 === parseInt(n[1], 10) && "boolean" == typeof n[3] && (e = n[3], "function" == typeof n[2] && n[2]("set", !0)); else if ("ping" === n[0]) { var i = { gdprApplies: e, cmpLoaded: !1, cmpStatus: "stub" }; "function" == typeof n[2] && n[2](i) } else a.push(n) }, n.addEventListener("message", (function (e) { var t = "string" == typeof e.data, a = {}; try { a = t ? JSON.parse(e.data) : e.data } catch (e) { } var n = a.__tcfapiCall; n && window.__tcfapi(n.command, n.version, (function (a, r) { var i = { __tcfapiReturn: { returnValue: a, success: r, callId: n.callId } }; t && (i = JSON.stringify(i)), e.source.postMessage(i, "*") }), n.parameter) }), !1)) }; "undefined" != typeof module ? module.exports = e : e() }();
-    </script> 
+    </script>
+
     <script>
+      ( function () {
+
+        var module = 'BlockHomepageModule';
+        if (module === 'BackboneUserModule'
+          || module === 'AdBlockerFaqModule'
+          || module === 'ResponsiveEducationModule'
+          || module === 'PianoSubscriptionPageModule') {
+          var events = "event70";
+          trackAdBlocks(events);
+          return;
+        }
 
         window._sp_ = {
           config: {
             accountId: 22,
-            propertyHref: "https://www.visitaalborg.com",
+            propertyHref: "https://dinesh-NewsQuest-06012021",
             baseEndpoint: 'https://cdn.privacy-mgmt.com',
-            ccpa: { },
-            gdpr: { },
-            env: "public",
             events: {
-
-                onMessageReady: function () {
-                    //console.log('onMessageReady')
-                },
-                
-                onMessageChoiceSelect: function (choice_id, choice_type_id) {
-                    //console.log('onMessageChoiceSelect choice_id: ', choice_id);
-                    //console.log('onMessageChoiceSelect choice_id: ', choice_type_id);
-                },
-                
-                onPrivacyManagerAction: function (pmData) {
-                    //console.log('onPrivacyManagerAction', pmData)
-                },
-                
-                onMessageChoiceError: function (err) {
-                    console.log('onMessageChoiceError', err)
-                },
-
-                onConsentReady: function (consentUUID, euconsent, userData) {
-                  console.log('onConsentReady', userData);
-                  console.log('consentUUID', consentUUID);
-                  console.log('euconsent', euconsent);
-                },
-                
-                onPMCancel: function () {
-                    console.log('onPMCancel')
-                },
-                
-                onMessageReceiveData: function (data) {
-                    console.log('onMessageReceiveData', data)
-                    //console.log(JSON.stringify(data));
-                },
-                
-                onSPPMObjectReady: function () {
-                    console.log('onSPPMObjectReady')
+              onMessageReady: function (choice_id, choice_type) {
+                trackAdBlocks('event76');
+              },
+              onMessageChoiceSelect: function (choice_id, choice_type_id) {
+                if (choice_type_id === 12) {
+                  trackAdBlocks('event77');
                 }
-
+                if (choice_type_id === 11) {
+                  trackAdBlocks('event78');
+                }
+              },
+              onPrivacyManagerActionStatus: function (pmData) {
+                if (pmData === 'all') {
+                  trackAdBlocks('event79');
+                }
+                if (pmData === 'some') {
+                  trackAdBlocks('event80');
+                }
+                if (pmData === 'none') {
+                  trackAdBlocks('event81');
+                }
+              }
             }
-          },
-
-          getCustomVendorConsents(vendorConsents, success) {
-            //console.log('>>> test <<< ' + success);
-            //console.log(vendorConsents);
-          }
-
-        }
-
-        function callback_function(tcData, success) {
-          // your custom callback code can be included here
-          if(success) {
-
-            console.log('tcData response:', tcData);
-
-            __tcfapi('ping', 2, (pingReturn) => {
-              // your custom callback code can be included here
-              console.log("retrieving pingReturn:", pingReturn)
-            });
-
-            if (tcData.eventStatus === 'useractioncomplete') {
-              // where eventStatus is 'useractioncomplete'  
-              console.log('eventStatus is useractioncomplete', ' + ', tcData);
-            } else if (tcData.eventStatus === 'tcloaded') {
-              // where eventStatus is 'tcloaded' 
-              console.log('eventStatus is tcloaded');
-            } else if (tcData.eventStatus === 'cmpuishown') {
-              // where eventStatus is 'cmpuishown'
-              console.log('eventStatus is cmpuishown');
-            }
-
           }
         }
 
-        function callback_function_gvl(gvl, success)  {
-          console.log("getVendorPurposeMapping response: ", gvl, " + ", success)
+        document.addEventListener('sp.blocking', function (e) {
+          var events = "event70";
+          if ($.cookie('nqab') === 'false') {
+              events += ',event74';
+          }
+          if ($.cookie('nqab') !== null) {
+              events += ',event72';
+              trackAdBlocks(events);
+              $.cookie('nqab', 'true', { expires: 365, path: '/' });
+              return;
+          }
+          $.cookie('nqab', 'true', { expires: 365, path: '/' });
+          events += ',event71';
+          trackAdBlocks(events);
+        });
+
+        document.addEventListener('sp.not_blocking', function (e) {
+          console.log('DFP: Not blocking triggered, cookie is %s', $.cookie('nqab'));
+          // If they have the cookie set, it means they saw the banner and now have disabled their adblocker.
+          if ($.cookie('nqab') === 'true') {
+              trackAdBlocks('event73');
+              $.cookie('nqab', 'false', { expires: 365, path: '/' });
+          }
+        });
+
+        __tcfapi('addEventListener', 2, function (tcData, success) {
+          console.log('DFP: Event Listen:', tcData);
+          if (success && tcData.eventStatus === 'useractioncomplete') {
+            var csnt = 'none';
+            if ($.cookie('_sp_enable_dfp_personalized_ads') === 'true') {
+                csnt = 'yes';
+            } else if ($.cookie('_sp_enable_dfp_personalized_ads') === 'false') {
+                csnt = 'no';
+            }
+            // ready to start DFP
+            startAdvertising(tcData.listenerId);
+            setTcfCookie(tcData.purpose.consents);
+            console.log('eventStatus = useractioncomplete');
+          } else if (success && tcData.eventStatus === 'tcloaded') {
+            startAdvertising(tcData.listenerId);
+          }
+        });
+
+        $(document).on('click', '.gdpr-option-v2', function (e) {
+          e.preventDefault();
+          trackAdBlocks('event77');
+          sendEvent76 = false;
+          var id = $(this).data('v2-id');
+          _sp_.loadPrivacyManagerModal(id);
+        });
+
+        function getTcfData() {
+          __tcfapi('getTCData', 2, function(data, success) {
+              setTcfCookie(data.purpose.consents);
+          }, [755]);
+        }
+        getTcfData();
+
+        function setTcfCookie(data) {
+          var consents = [];
+          $.each(data, function(id, consent)  {
+            var c = (consent === true) ? 'yes' : 'no';
+            consents.push(c)
+          });
+          console.log('DFP: consents length: ', consents.length);
+          if (consents.length !== 10) {
+            for (var i = consents.length; i < 10; i++) {
+                consents[i] = 'no';
+            }
+          }
+          console.log('DFP: Found consents to store in cookie:', consents);
+          $.cookie('prev-tcf-v2', consents.join(','), {domain: '.wimbledonguardian.co.uk', path: '/', expires: 100});
         }
 
-        function callback_function_cstm(gvl, success)  {
-          console.log("getCustomVendorConsents response: ", gvl, " + ", success)
+        var sendEvent76 = true;
+
+        function trackAdBlocks(events) {
+          if (events === 'event76' && !sendEvent76) {
+              return;
+          } else if (events === 'event76') {
+              sendEvent76 = false;
+          }
+          if (typeof window.s !== 'object') {
+              console.log('DFP: No window.s object found, trying again in 1 second');
+              window.setTimeout(function () { trackAdBlocks(events)} , 1000);
+              return;
+          }
+          console.log("ADB: Tracking %s", events);
+          // Re-create the Omniture object so the data can be tracked.
+          var s = window.s;
+          if (events.indexOf('event70') !== -1) {
+              console.log('DFP: Events passed, added evars');
+              s.eVar35 = 'enabled';
+              s.prop35 = 'enabled';
+          }
+          s.events = events;
+          s.linkTrackEvents = events;
+          s.linkTrackVars = "eVar2,eVar3,eVar4,eVar5,eVar6,evar7,evar8,evar9,eVar16,eVar19,eVar26,eVar35,eVar43,prop35";
+          s.suppressPageView = true;
+          s.tl(true,'o','Ad Block');
         }
 
-        function callback_function_pcc(data, success)  {
-          console.log("postCustomConsent callback")
-          console.log("postCustomConsent response: ", data, success)
+        function startAdvertising(id) {
+          console.log('DFP: Starting advertisement loading routine');
+          if (window.advertisingStart === true) {
+            return;
+          }
+          console.log('DFP: Running advertisement');
+          window.advertisingStart = true;
+          // remove the listener
+          if (id !== null) {
+            window.__tcfapi('removeEventListener', 2, function (success) { }, id);
+            console.log('removed: ' + id);
+          }
         }
 
-//window._sp_.getCustomVendorConsents((vendorConsents, success) => console.log(vendorConsents));
-//console.log(window._sp_.config.accountId);
-//window._sp_.getCustomVendorConsents();
-
-//__tcfapi('addEventListener', 2, callback_function); 
-
-//Sourcepoint getVendorPurposeMapping command that overrides the IAB 'getVendorList' command?
-//console.log("getVendorPurposeMapping call")
-//__tcfapi('getVendorPurposeMapping', 2, callback_function_gvl);
-//__tcfapi('getVendorPurposeMapping', 2, function(gvl, success) {console.log("getVendorPurposeMapping response: ", gvl, " + ", success);});
-
-console.log("getCustomVendorConsents call")
-__tcfapi('getCustomVendorConsents', 2, callback_function_cstm);
-//__tcfapi('getCustomVendorConsents', 2, function(gvl, success) {console.log("getCustomVendorConsents response: ", gvl, " + ", success);});
-
-//__tcfapi('getCustomVendorConsents', 2, function(vendorConsents, success) {
-//  if(success){
-//    //do something for success
-//    console.log(">> getCustomVendorConsents call 2 <<")
-//    console.log(vendorConsents);
-//  } else  {
-//    //do something else
-//    console.log(">> getCustomVendorConsents call failed <<")
-//  }
-//});
-
-//console.log("postCustomConsent call")
-// --> Add to vendors, working <--
-//__tcfapi('postCustomConsent', 2, callback_function_pcc, ["5f3bc0d7b8e05c606f3dfc27", "5f477cc6c442796aa67839d9", "5fd78083fc186126cb9fabad", "5f3a3e66ee0a81887437291c", "5fda5252b4f7ae27b97a1dfe", "5e7ced57b8e05c47e418b73c"], [], [] );
-
-// --> Add to purposes, not working <--
-//__tcfapi('postCustomConsent', 2, callback_function_pcc, [], ["6011ea75c5d9c787531b3ecf", "6011ea75c5d9c787531b3f0e"], [] );
-// --> Add to legitimate interests, working <--
-//__tcfapi('postCustomConsent', 2, callback_function_pcc, [], [], ["6011ea75c5d9c787531b3ecf", "6011ea75c5d9c787531b3f0e"] );
-
-// --> Add to vendors & legitimate interests, working <--
-//__tcfapi('postCustomConsent', 2, callback_function_pcc, ["5f3bc0d7b8e05c606f3dfc27", "5f477cc6c442796aa67839d9", "5fd78083fc186126cb9fabad", "5f3a3e66ee0a81887437291c", "5fda5252b4f7ae27b97a1dfe", "5e7ced57b8e05c47e418b73c"], [], ["6011ea75c5d9c787531b3ecf", "6011ea75c5d9c787531b3f0e"] );
-
-//__tcfapi('getVendorPurposeMapping', 2, (vendorPurposeMapping, success) => { console.log(vendorPurposeMapping); });
-//__tcfapi('getCustomVendorConsents', 2, (vendorPurposeMapping, success) => { console.log(vendorPurposeMapping); });
-
+      })();
     </script>
     <script src="https://cdn.privacy-mgmt.com/wrapperMessagingWithoutDetection.js"></script>
 
